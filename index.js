@@ -4,7 +4,7 @@ const axios = require('axios')
 const app = express()
 const baseUrl = `https://v6.exchangerate-api.com/v6/${process.env.API_KEY}`
 
-app.get('/:from/:to/:price', async (req, res) => {
+app.get('/:from/:to/', async (req, res) => {
     const {from, to} = req.params
     console.log(from, to)
     const price = req.params
@@ -20,7 +20,7 @@ app.get('/:from/:to/:price', async (req, res) => {
                 res.status(500).send({error: errors.message, status:false})
         })
                 
-        
+
 })
 
 app.listen(process.env.PORT || 3000, () => {
