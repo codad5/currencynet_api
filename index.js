@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const axios = require('axios')
-cosnt cors = require('cors')
+const cors = require('cors')
 const app = express()
 const baseUrl = `https://v6.exchangerate-api.com/v6/${process.env.API_KEY}`
 
