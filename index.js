@@ -24,7 +24,7 @@ app.get('/:from/:to/', async (req, res) => {
     let rate = await getRate(from, to)
     console.log(rate)
     if(!rate.status){
-        rate = await getRate(to, from, process.env.API_KEY_2)
+        rate = await getRate(from, to, process.env.API_KEY_2)
         console.log(rate.err, "running")
     }
     console.log(rate.msg)
