@@ -3,24 +3,32 @@ const express = require('express')
 const axios = require('axios')
 const cors = require('cors')
 const app = express()
-const baseUrl = `https://v6.exchangerate-api.com/v6/${process.env.API_KEY}`
+// const baseUrl = `https://v6.exchangerate-api.com/v6/${process.env.API_KEY}`
+const getRate = (from, to, API_KEY = process.env.API_KEY) => {
+    const baseUrl = `https://v6.exchangerate-api.com/v6/${API_KEY}/pair/${from}/${to}`
+    return axios.get(baseUrl)
+        .then(res => {
+            return { ...res.data, status: true, from, to, msg: 'success' }
+        }).catch(err => {
+            return { status: false, err , msg: `Something went wrong ${err.message}`}
+        }
+        )
+
+}
 
 app.use(cors())
 app.get('/:from/:to/', async (req, res) => {
     const {from, to} = req.params
     console.log(from, to)
     const price = req.params
-    axios.get(`${baseUrl}/pair/${from}/${to}`)
-         .then(response => {
-            console.log(response.data)
-            //send response to client
-            res.send({...response.data, status:true, from, to})
-         })
-         .catch(errors => {
-                console.log(errors)
-                // send a json respond with a status of 500 and the error message
-                res.status(500).send({error: errors.message, status:false})
-        })
+    let rate = await getRate(from, to)
+    console.log(rate)
+    if(!rate.status){
+        rate = await getRate(to, from, process.env.API_KEY_2)
+        console.log(rate.err, "running")
+    }
+    console.log(rate.msg)
+    res.send(rate)
                 
 
 })
